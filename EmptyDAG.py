@@ -11,10 +11,11 @@ default_args = {
 }
 
 dag = DAG(
-'example_dag',
+dag_id='EmptyDAG',
 default_args=default_args,
 description='A simple tutorial DAG',
-schedule=None,
+schedule_interval='@daily',
+catchup=False
 )
 
 t1 = EmptyOperator(
