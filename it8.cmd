@@ -1,8 +1,4 @@
-# ложим код в репозиторий git
-# 1. Идем на https://github.com/, логинимся
-# 2. Создаем репозиторий 
-# 3. Создадим py-файл paskal.py
-# 4. Добавим в него код и нажмем Commit changes.
+# Выкладываем код в репозиторий git
 #################### EmptyDAG.py ####################################
 from airflow import DAG
 from airflow.operators.empty import EmptyOperator
@@ -11,24 +7,24 @@ from datetime import datetime
 default_args = {
 'owner': 'airflow',
 'depends_on_past': False,
-'start_date': datetime(2024, 12, 5, 9, 45),
+'start_date': datetime(2024, 12, 6),
 'email_on_failure': False,
 'email_on_retry': False,
 }
 
 dag = DAG(
-'example_dag',
+dag_id='EmptyDAG',
 default_args=default_args,
 description='A simple tutorial DAG',
-schedule=None,
+schedule_interval='45 9 * * * ',
+catchup=False
 )
 
 t1 = EmptyOperator(
 task_id='dummy_task',
 retries=3,
 dag=dag,
-)
-######################################################################
+)######################################################################
 # Для того, чтобы настроить Apache Airflow, для minikube нужно выделить 8GB и 4 ядра.
 minikube start --driver=docker --memory 8g --cpus 4
 minikube status
@@ -44,10 +40,10 @@ helm install airflow apache-airflow/airflow \
 --namespace airflow \
 --create-namespace \
 --set dags.gitSync.enabled=true \
---set dags.gitSync.repo=https://github.com/vokulovskiy/1t_672.git \
+--set dags.gitSync.repo=https://github.com/vokulovskiy/1T_it8 \
 --set dags.gitSync.branch=main \
 --set dags.gitSync.subPath="/"
 
 kubectl get pods -n airflow
-kubectl get svc
+kubectl get svc airflow-webserver
 kubectl port-forward svc/airflow-webserver 8888:8080 --namespace airflow
